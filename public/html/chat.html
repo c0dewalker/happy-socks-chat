@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Happy Socks Chat</title>
+  <link rel="icon" href="/favicon-32x32.png" type="image/png" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+    integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+  <script type="text/javascript" <!--
+    src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script defer src="/js/chat.js"></script>
+  <script src="
+   https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.4/qs.min.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div class="container-fluid h-100" id="chat-container" v-cloak>
+    <div class="row justify-content-center h-100">
+
+      <div class="col-md-4 col-xl-3 chat">
+
+        <div class="card mb-sm-3 mb-md-0 contacts_card">
+
+          <div class="card-header">
+            <div class="input-group">
+              <select class="custom-select bg-light" v-model="room" @change="channel">
+                <option value="elbrus">Ельбрус</option>
+                <option value="cats">Котики</option>
+                <option value="emojis">Эмоджи</option>
+                <option value="tanks">Танки</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="card-body contacts_body">
+            <ul class="contacts">
+
+
+              <li v-for="user in users">
+                <div class="d-flex bd-highlight">
+                  <div class="img_cont">
+                    <img v-bind:src="user.avatar" class="rounded-circle user_img">
+                    <span class="online_icon online"></span>
+                  </div>
+                  <div class="user_info">
+                    <span>{{user.name}}</span>
+                    <!-- <p>Rashid left 50 mins ago</p> -->
+                  </div>
+                </div>
+              </li>
+
+            </ul>
+          </div>
+
+
+          <div class="card-footer"></div>
+        </div>
+      </div>
+
+
+
+      <div class="col-md-8 col-xl-6 chat">
+        <div class="card">
+
+          <div class="card-header msg_head">
+            <div class="d-flex bd-highlight">
+
+              <div class="img_cont">
+                <img
+                  src="data:image/png;base64,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"
+                  class="rounded-circle user_img">
+              </div>
+              <div class="user_info">
+                <span>{{channels[room]}}</span>
+                <p>{{messages.length}} сообщений</p>
+              </div>
+              <!-- <div class="video_cam">
+                <span><i class="fas fa-video"></i></span>
+                <span><i class="fas fa-phone"></i></span>
+              </div> -->
+            </div>
+            <!-- <span id="action_menu_btn"><i class="fas fa-ellipsis-v"></i></span>
+            <div class="action_menu">
+              <ul>
+                <li><i class="fas fa-user-circle"></i> View profile</li>
+                <li><i class="fas fa-users"></i> Add to close friends</li>
+                <li><i class="fas fa-plus"></i> Add to group</li>
+                <li><i class="fas fa-ban"></i> Block</li>
+              </ul>
+            </div> -->
+          </div>
+
+
+
+          <div class="card-body msg_card_body">
+
+            <div
+              :class="{'justify-content-start' : user.socketId !== msg.socketId, 'justify-content-end': user.socketId === msg.socketId, 'd-flex' : true, 'mb-4' : true }"
+              v-for="msg of messages">
+              <div class="img_cont_msg">
+                <img :src="msg.avatar" class="rounded-circle user_img_msg">
+              </div>
+              <div class="msg_cotainer">
+                {{ msg.body }}
+                <span class="msg_time">{{msg.name}}</span>
+              </div>
+            </div>
+
+
+          </div>
+
+
+          <div class="card-footer">
+            <div class="input-group">
+              <div class="input-group-append">
+                <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
+              </div>
+              <textarea name="" class="form-control type_msg" placeholder="Type your message..." v-model="message"
+                @keyup.enter="send"></textarea>
+              <div class="input-group-append">
+                <span class="input-group-text send_btn" @click="send"><i class="fas fa-location-arrow"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

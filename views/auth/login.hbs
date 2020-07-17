@@ -1,0 +1,38 @@
+<div class="container has-text-centered">
+  <div class="column is-4 is-vcentered is-offset-4">
+    <div class="box">
+      <p class="subtitle is-4">Вход</p>
+      <br />
+      <form id="login-form" action="/auth/login" method="POST">
+        <div class="field">
+          <p class="control has-icons-left">
+            <input class="input is-medium" type="email" name="email" placeholder="Email" />
+            <span class="icon is-medium is-left">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control has-icons-left">
+            <input class="input is-medium" type="password" name="password" placeholder="Password" />
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+          </p>
+        </div>
+
+        <div>
+          <p class="error invisible">TEST ERROR</p>
+        </div>
+
+        <button class="button is-primary is-medium is-fullwidth" type="submit">Войти</button><br />
+
+      </form>
+    </div>
+    <p class="has-text-grey">
+      <a href="/auth/signup">Регистрация</a>
+    </p>
+  </div>
+</div>
+</div>
+<script defer src="/js/login.js"></script>

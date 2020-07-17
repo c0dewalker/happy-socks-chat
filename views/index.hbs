@@ -1,0 +1,12 @@
+<h1>{{title}}</h1>
+
+<!-- форма сообщений -->
+<div class="chat-container">
+  <form name="publish">
+    <input type="text" name="message" v-model="message">
+    <input type="submit" value="Отправить">
+  </form>
+  <p>{{ message }}</p>
+  <!-- div с сообщениями -->
+  <div id="messages"></div>
+</div>

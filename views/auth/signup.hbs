@@ -1,0 +1,48 @@
+<div class="container has-text-centered">
+  <div class="column is-4 is-vcentered is-offset-4">
+
+    <div class="box">
+      <p class="subtitle is-4">Регистрация нового пользователя</p>
+      <br />
+
+      <form id="signup-form" action="/auth/signup" method="POST">
+        <div class="field">
+          <p class="control has-icons-left">
+            <input class="input is-medium" type="text" name="fullName" placeholder="Имя" required />
+            <span class="icon is-medium is-left">
+              <i class="fas fa-user"></i>
+            </span>
+          </p>
+        </div>
+
+        <div class="field">
+          <p class="control has-icons-left">
+            <input class="input is-medium" type="email" name="email" placeholder="Email" required />
+            <span class="icon is-medium is-left">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control has-icons-left">
+            <input class="input is-medium" type="password" name="password" placeholder="Пароль" required />
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+          </p>
+        </div>
+        <div>
+          <p class="error invisible">TEST ERROR</p>
+        </div>
+        <button type="submit" class="button is-primary is-medium is-fullwidth">Зарегистрироваться</button><br />
+
+      </form>
+
+    </div>
+    <p class="has-text-grey">
+      <a href="/auth/login">Логин</a>
+    </p>
+
+  </div>
+</div>
+<script defer src="/js/signup.js"></script>
