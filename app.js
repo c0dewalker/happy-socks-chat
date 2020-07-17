@@ -187,7 +187,7 @@ async function createUser(name, room, gender, socketId) {
 async function deleteAllUsers() {
   return await User.deleteMany({})
 }
-deleteAllUsers()
+// deleteAllUsers()
 
 io.on('connect', socket => {
 
