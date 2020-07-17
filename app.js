@@ -9,7 +9,7 @@ const compression = require('compression')
 const axios = require('axios')
 
 const mongoose = require('mongoose')
-mongoose.connect(process.env.DB_CONNECTION', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
 const User = require('./models/user')
