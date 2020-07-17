@@ -3,7 +3,7 @@ const express = require('express')
 const path = require('path')
 const createError = require('http-errors')
 const cookieParser = require('cookie-parser')
-const logger = require('morgan')
+// const logger = require('morgan')
 const helmet = require('helmet')
 const compression = require('compression')
 const axios = require('axios')
@@ -44,7 +44,7 @@ app.set('view engine', 'hbs');
 
 app.use(helmet())
 app.use(compression())
-app.use(logger('dev'));
+// app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
