@@ -10,7 +10,7 @@ form.addEventListener('submit', async (e) => {
   })
   const responseJson = await response.json()
   if (response.status === 200)
-    window.location = 'http://localhost:3000/home'
+    window.location = 'https://dashboard.heroku.com/apps/ancient-woodland-32764/home'
   else if (response.status >= 400) {
     errorMessage.innerText = responseJson.message
     if (errorMessage.classList.contains('invisible'))
