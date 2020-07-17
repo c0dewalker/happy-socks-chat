@@ -76,7 +76,7 @@ router.post('/login', upload.none(), async function (req, res, next) {
     req.session.save(err => {
       if (err) console.log(err)
       else {
-        console.log(req.session)
+        // console.log(req.session)
         res.json({ message: 'Добро пожаловать' })
       }
     })

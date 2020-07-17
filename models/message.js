@@ -12,8 +12,4 @@ const messageSchema = new mongoose.Schema({
   room: String
 })
 
-messageSchema.statics.mostRecent = async function (room) {
-  return this.find({ room }).sort({ 'date': -1 }).limit(5).exec();
-}
-
 module.exports = mongoose.model('Message', messageSchema)

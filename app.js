@@ -127,6 +127,8 @@ const server = app.listen(process.env.PORT || 3000)
 
 const io = require('socket.io')(server, { pingTimeout: 60000 });
 
+// io.set('authorization', (handshake, callback) => {
+// })
 
 // io.use(passportSocketIo.authorize({
 //   cookieParser: cookieParser,       // the same middleware you registrer in express
@@ -170,27 +172,18 @@ const io = require('socket.io')(server, { pingTimeout: 60000 });
 
 
 async function createUser(name, room, gender, socketId) {
-  // const avatar = await axios.get('https://randomuser.me/api/')
-  // console.log(avatar.data.message)
-
-  // const randomuser = await axios.get(`<img src="https://robohash.org/${socketId}">`)
-  // const avatar = randomuser.data.results[0].picture.medium
   const avatar = `https://robohash.org/${socketId}.png`
   const newUser = new User({ name, room, socketId, avatar })
   await newUser.save()
   return newUser
 }
 
-// async function getRoomUsers(room) {
-//   return users = await User.find({ room })
-// }
 async function deleteAllUsers() {
   return await User.deleteMany({})
 }
-// deleteAllUsers()
+// deleteAl lUsers()
 
 io.on('connect', socket => {
-
   socket.on('new-user', async ({ name, room, gender }) => {
     const user = await createUser(name, room, gender, socket.id)
     socket.join(room)
@@ -199,8 +192,8 @@ io.on('connect', socket => {
     const users = await User.find({ room })
     socket.emit('usersInChannel', users)
 
-    // const messages = await Message.mostRecent({ room })
-    // socket.emit('messagesInChat', messages)
+    messages = await Message.find({ room }).sort({ 'date': -1 }).limit(5)
+    socket.emit('messagesInChat', messages)
 
     socket.broadcast.to(room).emit('user-connected', user);
   })
@@ -217,32 +210,29 @@ io.on('connect', socket => {
 
   // Runs when client disconnects
   socket.on('disconnect', async () => {
-    // const user = userLeave(socket.id);
     const user = await User.findOneAndDelete({ socketId: socket.id })
 
     if (user) {
       io.emit('user-left', user)
+      console.log(user.name + ' left')
     }
   });
 
   socket.on('room-changed', async newroom => {
-
     const user = await User.findOne({ socketId: socket.id })
-
     const oldroom = user.room
-
     socket.leave(oldroom)
     socket.join(newroom)
     user.room = newroom
-
     await user.save()
     socket.emit('i-am-user', user)
 
     const usersOld = await User.find({ room: oldroom })
     const usersNew = await User.find({ room: newroom })
-
     socket.to(oldroom).emit('usersInChannel', usersOld)
     socket.emit('usersInChannel', usersNew)
+    messages = await Message.find({ room: newroom }).sort({ 'date': -1 }).limit(5)
+    socket.emit('messagesInChat', messages)
     socket.broadcast.to(newroom).emit('user-connected', user);
   })
 
