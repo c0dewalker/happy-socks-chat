@@ -16,19 +16,19 @@ const User = require('./models/user')
 const Message = require('./models/message')
 
 
-// const session = require('express-session')
-// const passport = require('passport')
-// const passportSession = require('passport-session')
-// const MongoStore = require('connect-mongodb-session')(session)
-// const facebookStrategy = require('passport-facebook').Strategy
-// const localStrategy = require('passport-local').Strategy
-// const passportSocketIo = require('passport.socketio')
-// const bcrypt = require('bcrypt')
+const session = require('express-session')
+const passport = require('passport')
+const passportSession = require('passport-session')
+const MongoStore = require('connect-mongodb-session')(session)
+const facebookStrategy = require('passport-facebook').Strategy
+const localStrategy = require('passport-local').Strategy
+const passportSocketIo = require('passport.socketio')
+const bcrypt = require('bcrypt')
 
-// const store = new MongoStore({
-//   collection: 'sessions',
-//   uri: process.env.DB_CONNECTION
-// })
+const store = new MongoStore({
+  collection: 'sessions',
+  uri: process.env.DB_CONNECTION
+})
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -50,72 +50,72 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use(session({
-//   secret: 'acid cat',
-//   resave: true,
-//   saveUninitialized: true,
-//   store
-// }))
+app.use(session({
+  secret: 'acid cat',
+  resave: true,
+  saveUninitialized: true,
+  store
+}))
 
 
-// passport.use(new localStrategy({
-//   usernameField: 'email',
-//   passwordField: 'password'
-// },
-//   async function (username, password, done) {
-//     const areSame = await bcrypt.compare(password, user.password)
-//     User.findOne({ username: username }, function (err, user) {
-//       if (err) { return done(err); }
-//       if (!user) {
-//         return done(null, false, { message: 'Incorrect username.' });
-//       }
-//       if (!areSame) {
-//         return done(null, false, { message: 'Incorrect password.' });
-//       }
-//       return done(null, user);
-//     });
-//   }
-// ));
+passport.use(new localStrategy({
+  usernameField: 'email',
+  passwordField: 'password'
+},
+  async function (username, password, done) {
+    const areSame = await bcrypt.compare(password, user.password)
+    User.findOne({ username: username }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!areSame) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
 
-// passport.use(new FacebookStrategy({
-//   clientID: process.env['FACEBOOK_CLIENT_ID'],
-//   clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
-//   callbackURL: "http://localhost:3000/auth/facebook/callback"
-// },
-//   function (accessToken, refreshToken, profile, cb) {
-//     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-//       return cb(err, user);
-//     });
-//   }
-// ));
+passport.use(new facebookStrategy({
+  clientID: process.env['FACEBOOK_CLIENT_ID'],
+  clientSecret: process.env['FACEBOOK_CLIENT_SECRET'],
+  callbackURL: "https://ancient-woodland-32764.herokuapp.com/auth/facebook/callback"
+},
+  function (accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 
-// app.get('/auth/facebook',
-//   passport.authenticate('facebook'));
+app.get('/auth/facebook',
+  passport.authenticate('facebook'));
 
-// app.get('/auth/facebook/callback',
-//   passport.authenticate('facebook', { failureRedirect: '/login' }),
-//   function (req, res) {
-//     // Successful authentication, redirect home.
-//     res.redirect('/');
-//   });
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/auth/login' }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/home');
+  });
 
-// passport.serializeUser(function (user, done) {
-//   done(null, user.id);
-// });
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
 
-// passport.deserializeUser(function (id, done) {
-//   User.findById(id, function (err, user) {
-//     done(err, user);
-//   });
-// });
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
 
-// app.post('/login',
-//   passport.authenticate('local', {
-//     successRedirect: '/',
-//     failureRedirect: '/login',
-//     // failureFlash: true
-//   })
-// );
+app.post('/login',
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    // failureFlash: true
+  })
+);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

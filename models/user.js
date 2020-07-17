@@ -2,12 +2,12 @@ const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
   name: String,
-  // email: {
-  //   type: String,
-  //   unique: true,
-  //   required: true
-  // },
-  // password: String,
+  email: {
+    type: String,
+    unique: true,
+  },
+  facebookId: String,
+  password: String,
   socketId: String,
   avatar: String,
   messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }],

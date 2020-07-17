@@ -5,6 +5,10 @@ var router = express.Router();
 //   res.sendFile(__dirname.slice(0, __dirname.lastIndexOf('/')) + '/public/html/index.html')
 //   // res.render('index', { title: 'Happy Socks Chat' });
 // });
+router.get('/', function (req, res, next) {
+  res.sendFile(__dirname.slice(0, __dirname.lastIndexOf('/')) + '/public/html/login.html')
+  // res.render('auth/login', { title: 'Login' })
+});
 
 router.get('/chat', (req, res, next) => {
   console.log(req.query.params)

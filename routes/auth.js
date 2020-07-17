@@ -12,7 +12,11 @@ router.get('/signup', function (req, res, next) {
 
 
 router.get('/login', function (req, res, next) {
-  res.sendFile(__dirname.slice(0, __dirname.lastIndexOf('/')) + '/public/html/login.html')
+  res.render('auth/login', { title: 'Login' })
+});
+
+router.get('/facebook/fallback', function (req, res, next) {
+  res.redirect('/auth/login')
   // res.render('auth/login', { title: 'Login' })
 });
 
@@ -52,16 +56,17 @@ router.post('/signup', upload.none(), async function (req, res, next) {
 router.post('/login', upload.none(), async function (req, res, next) {
   const { email, password } = req.body
   const user = await User.findOne({ email })
-  const areSame = bcrypt.compare(password, user.password)
+
   if (!email || !password) {
     res.status(400)
-    res.json({ message: 'Заполните все поля формы регистрации!' })
+    return res.json({ message: 'Заполните все поля формы регистрации!' })
   }
   else if (!user) {
     res.status(400)
-    res.json({ message: 'Такого пользователя нет!' })
+    return res.json({ message: 'Такого пользователя нет!' })
   }
-  else if (!areSame) {
+  else if (!bcrypt.compare(password, user.password)) {
+    // const areSame = bcrypt.compare(password, user.password)
     res.status(400)
     res.json({ message: 'Неверный пароль!' })
   }
