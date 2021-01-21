@@ -29,7 +29,7 @@
     "passport-local": "^1.0.0",
     "passport-session": "^1.0.2",
     "passport.socketio": "^3.7.0",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "ws": "^7.3.1"
   }
 }
